@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="/style/global.css">
+    <link rel="stylesheet" href="/style/inicio.css">
+
+    <link rel="stylesheet" href="/style/loginregister.css"> <!-- CSS popup de login e cadastro -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MapaWeb</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="/index.html"><img class="logoheader" src="/img/logo.png" alt="Logo"></a>
+            <a href="" class="to-header">Sobre</a>
+            <a href="/mapa.html" class="to-header">Acesse</a>
+            <button class="login">Login</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="principal">
+            <div class="conteudo-principal">
+                <h1 class="h1-main">A cidade é de todos. <br>
+                Vamos mapeá-la para todos!</h1>
+                <p class="p-main">Nosso mapa colaborativo mostra os caminhos acessíveis e os pontos de atenção.<br>
+                Participe e ajude a transformar sua cidade em um lugar mais inclusivo para todos. Faça o login e comece já!</p>
+            </div>
+            <div class="click-footer">
+                <a href="/mapa.html" class="acesse">Acesse<img class="img-footer-1" src="/img/acesse.png"></a>
+                <a href="" class="saiba"><img class="img-footer-2" src="/img/saiba.png">Saiba mais</a>
+            </div>
+        </div>
+    </main>
+
+    <div class="wrapper">
+        <span class="icon-close">
+            <ion-icon name="close"></ion-icon>
+        </span>
+
+        <div class="form-box logar">
+            <h2>Login</h2>
+            <form action="#" id="login-form">
+                <div class="input-box">
+                    <span class="icon">
+                        <ion-icon name="mail"></ion-icon>
+                    </span>
+                    <input type="email" id="login-email" required>
+                    <label>E-mail</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon">
+                        <ion-icon name="lock"></ion-icon>
+                    </span>
+                    <input type="password" id="login-senha" required>
+                    <label>Senha</label>
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox">Lembrar-me</label>
+                    <a href="#">Esqueceu a senha?</a>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+                <div class="login-register">
+                    <p>Não possui uma conta? <a href="#" class="cadastrar-link">Cadastre-se</a></p>
+            </form>
+        </div>
+
+        <div class="form-box cadastrar">
+            <h2>Cadastro</h2>
+            <form action="#" id="cadastro-form">
+                <div class="input-box">
+                    <span class="icon">
+                        <ion-icon name="person"></ion-icon>
+                    </span>
+                    <input type="text" id="cadastro-nome" required>
+                    <label>Nome Completo</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon">
+                        <ion-icon name="mail"></ion-icon>
+                    </span>
+                    <input type="email" id="cadastro-email" required>
+                    <label>E-mail</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon">
+                        <ion-icon name="lock"></ion-icon>
+                    </span>
+                    <input type="password" id="cadastro-senha" required>
+                    <label>Senha</label>
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox">Eu concordo com os termos de uso</label>
+                </div>
+                <button type="submit" class="btn">Cadastrar</button>
+                <div class="login-register">
+                    <p>Já possui uma conta? <a href="#" class="logar-link">Entrar</a></p>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="/script/script.js"></script>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+
+</body>
+</html>

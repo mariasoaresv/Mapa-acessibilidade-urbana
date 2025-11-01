@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+.container-principal {
+    margin-top: 200px;
+    margin-bottom: 50px;
+    padding: 24px;
+    gap: 24px;
+    width: 70%;
+    min-height: 70vh;
+    background-color: rgb(245, 245, 245, 0.8);
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.container-principal h1 {
+    text-align: center;
+    font-size: 40px;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 400;
+    color: #000C3B;
+}
+
+h1 strong {
+    font-weight: 700;
+}
+
+.colunas {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.esquerda {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    margin-right: 45px;
+    margin-left: 50px;
+}
+
+.pesquisar {
+    width: 760px;
+    display: flex;
+    align-items: center;
+    display: flex;
+    padding: 10px 15px;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+}
+
+.pesquisar input{
+    padding-left: 24px;
+    border: none;
+    background: none;
+    outline: none;
+    color: #000C3B;
+}
+
+.pesquisar button{
+    padding-left: 480px;
+    border: none;
+    color: #000C3B;
+    cursor: pointer;
+}
+
+.icon {
+    font-size: 24px;
+    color: #000C3B;
+}
+
+.mapa {
+    width: 760px;
+    height: 560px;
+    border: 2px solid #ffffff;
+    border-radius: 30px;
+    position: relative;
+}
+
+.icon.expand {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.icon.help {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+}
+
+.icon.zoomin {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+}
+
+.icon.zoomout {
+    position: absolute;
+    bottom: 16px;
+    right: 46px;
+}
+
+.direita {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    flex: 0 0 320px;
+    padding-top: 60px;
+    height: 560px;
+}
+
+.icones {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+}
+
+.icones-grupo h4{
+    font-family: "Quicksand", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000C3B;
+    margin: 0 0 10px 0;
+}
+
+.rampas {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.obstaculos {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 15px;
+}
+.rotas {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 15px;
+}
+.estabelecimentos {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 15px;
+}
+.vagas {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 15px;
+}

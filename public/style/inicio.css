@@ -1,0 +1,59 @@
+.h1-main {
+  /* width: 25%; */
+  text-align: center;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 40px;
+  width: 700px;
+  height: 242;
+  margin: 10% 10% 5% 10%;  
+}
+
+.p-main {
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 15px; 
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  padding-top: 10%; 
+  align-items: center;    
+}
+
+.acesse, .saiba{
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width: 20%;
+  height: 40px;
+  color: #FFFFFF;
+  border-radius: 50px;
+  border: 2px solid #FFFFFF;
+  background-color: #ffffff75;
+  text-decoration: none;
+  text-align: center;
+  padding: 15px;
+  gap: 10px;
+  margin: 5px; 
+}
+
+.click-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 14px;
+  margin: 20px;
+}
+
+.img-footer-1 {
+  width: 25px;
+}
+.img-footer-2 {
+  width: 15px;
+  padding: 3px;
+}

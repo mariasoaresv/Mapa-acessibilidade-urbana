@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="stylesheet" href="/style/global.css">
+    <link rel="stylesheet" href="/style/mapa.css">
+    <link rel="stylesheet" href="/style/detalhes-mapa.css">
+    <link rel="stylesheet" href="/style/loginregister.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.11.0/dist/geosearch.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MapaWeb</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="/index.html"><img class="logoheader" src="/img/logo.png" alt="Logo"></a>
+            <a href="" class="to-header">Sobre</a>
+            <a href="/mapa.html" class="to-header">Acesse</a>
+            </nav>
+    </header>
+
+    <main>
+        <div class="container-principal">
+
+            <h1>Olá, <strong id="nome-usuario">Usuário!</strong> Bem vindo(a) ao mapa de acessibilidade interativo!</h1>
+
+            <div class="colunas">
+                <div class="esquerda">
+                    <div class="mapa" id="mapa-container"></div>
+                </div>
+
+                <div class="direita">
+                    <div class="icones">
+                        <div class="icones-grupo">
+                            <h4>Rampas</h4>
+                            <div class="rampas">
+                                <img class="draggable-icon" draggable="true" id="rampa-aces" src="/img/rampa-aces.png">
+                                <img class="draggable-icon" draggable="true" id="rampa-dif" src="/img/rampa-dif.png">
+                                <img class="draggable-icon" draggable="true" id="rampa-ing" src="/img/rampa-ing.png">
+                            </div>
+                        </div>
+                        <div class="icones-grupo">
+                            <h4>Obstáculos</h4>
+                            <div class="obstaculos">
+                                <img class="draggable-icon" draggable="true" id="seguro" src="/img/seguro.png">
+                                <img class="draggable-icon" draggable="true" id="obstaculo" src="/img/obstaculo.png">
+                                <img class="draggable-icon" draggable="true" id="atencao" src="/img/atencao.png">
+                            </div>
+                        </div>
+                        <div class="icones-grupo">
+                            <h4>Rotas</h4>
+                            <div class="rotas">
+                                <img class="draggable-icon" draggable="true" id="bom" src="/img/bom.png">
+                                <img class="draggable-icon" draggable="true" id="medio" src="/img/medio.png">
+                                <img class="draggable-icon" draggable="true" id="ruim" src="/img/ruim.png">
+                            </div>
+                        </div>
+                        <div class="icones-grupo">
+                            <h4>Estabelecimentos</h4>
+                            <div class="estabelecimentos">
+                                <img class="draggable-icon" draggable="true" id="estab-bom" src="/img/estab-bom.png">
+                                <img class="draggable-icon" draggable="true" id="estab-medio" src="/img/estab-medio.png">
+                                <img class="draggable-icon" draggable="true" id="estab-ruim" src="/img/estab-ruim.png">
+                            </div>
+                        </div>
+                        <div class="icones-grupo">
+                            <h4>Vagas</h4>
+                            <div class="vagas">
+                                <img class="draggable-icon" draggable="true" id="vagas-aces" src="/img/vagas-aces.png">
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div> 
+    </main>
+
+    <div id="popup-detalhes-container" class="popup-escondido">
+        <div class="popup-detalhes-conteudo"> <span id="popup-detalhes-fechar" class="popup-detalhes-fechar-icon">
+                <ion-icon name="close"></ion-icon>
+            </span>
+            
+            <h3>Adicionar detalhes:</h3>
+
+            <form id="popup-detalhes-form">
+                
+                <div class="popup-detalhes-colunas">
+
+                    <div class="popup-detalhes-col-esq">
+                        <label for="popup-detalhes-foto" class="popup-detalhes-upload-area">
+                            <ion-icon name="image-outline"></ion-icon>
+                        </label>
+                        <input type="file" id="popup-detalhes-foto" accept="image/*" class="popup-escondido">
+                    </div>
+
+                    <div class="popup-detalhes-col-dir">
+                        <div class="popup-detalhes-campo-icone">
+                            <label>Ícone selecionado:</label>
+                            <img id="popup-detalhes-icone" src="" alt="Ícone">
+                        </div>
+
+                        <div class="popup-detalhes-campo">
+                            <label for="popup-detalhes-titulo">Título:</label>
+                            <input type="text" id="popup-detalhes-titulo" placeholder="Digite aqui..." required>
+                        </div>
+
+                        <div class="popup-detalhes-campo">
+                            <label for="popup-detalhes-observacao">Observação:</label>
+                            <textarea id="popup-detalhes-observacao" placeholder="Digite aqui..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="popup-detalhes-botoes">
+                    <button type="submit" class="btn-enviar">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-geosearch@3.11.0/dist/geosearch.umd.js"></script>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    
+    <script src="/script/mapa.js"></script>
+
+</body>
+</html>

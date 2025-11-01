@@ -13,7 +13,7 @@ body {
 
 body::after {
   content: '';
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -32,7 +32,7 @@ nav{
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 100px;
   margin: 40px auto;
-  width: 90%;
+  width: 80%;
   padding: 10px 40px;
   gap: 20px;
 }
@@ -44,12 +44,12 @@ nav{
   font-size: 16px;
   padding: 0 80px;
 }
+
 .to-header:hover {
   color: #FFFFFF;
 }
 
-.login,
-.cadastro {
+.login {
   border-radius: 40px;
   width: 100px;
   padding: 10px;
@@ -57,24 +57,16 @@ nav{
   text-decoration: none;
   font-weight: bold;
   font-size: 14px;
-  border: 1px solid #000C3B;
-  border-top: 1px;
-}
-
-.login {
+  border: none;
   background-color: #000C3B;
   color: #FFFFFF;
+  cursor: pointer;
 }
 
-.cadastro:hover, .login:hover{
+.login:hover{
   background-color: transparent;
-  border: 1px solid #000C3B;
+  border: 2px solid #000C3B;
   color: #000C3B;
-}
-
-.cadastro {
-  background-color: #000C3B;
-  color: #FFFFFF;
 }
 
 .logoheader {
