@@ -82,4 +82,4 @@ O objetivo do projeto é **promover a inclusão e acessibilidade urbana**, crian
 
 🔗 LinkedIn: linkedin.com/in/maria-fernanda-soares
 💻 **GitHub:** [mariasoaresv](https://github.com/mariasoaresv)
-🌍 **Repositório:** [Mapa de Acessibilidade Urbana](https://github.com/mariasoaresv/Mapa)
+🌍 **Repositório:** [Mapa de Acessibilidade Urbana](https://github.com/mariasoaresv/Mapa-acessibilidade-interativo)
