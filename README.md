@@ -80,6 +80,5 @@ O objetivo do projeto é **promover a inclusão e acessibilidade urbana**, crian
 
 ## 🌐 Contato
 
-🔗 **LinkedIn**: [Maria Fernanda](linkedin.com/in/maria-fernanda-soares-silva)
+🔗 **LinkedIn**: [Maria Fernanda Soares](https://linkedin.com/in/maria-fernanda-soares-silva)
 💻 **GitHub:** [mariasoaresv](https://github.com/mariasoaresv)
-🌍 **Repositório:** [Mapa de Acessibilidade Urbana](https://github.com/mariasoaresv/Mapa-acessibilidade-interativo)
