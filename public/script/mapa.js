@@ -24,6 +24,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const geoSearchProvider = new GeoSearch.OpenStreetMapProvider();
     let map;
 
+    // Função auxiliar para adicionar eventos (reutilizada no Load e no Drop)
+    function adicionarEventosMarcador(marker) {
+        // Clique ESQUERDO no marcador/icone
+        marker.on('click', (e) => {
+            L.DomEvent.stopPropagation(e);
+            if(menuContexto) menuContexto.classList.add('popup-escondido');
+            
+            const dados = marker.dados;
+
+            if (!dados.titulo) {
+                return;
+            }
+
+            let popupConteudoHTML = `<b>${dados.titulo}</b><br>${dados.descricao}`;
+
+            if (dados.foto) {
+                popupConteudoHTML += `<br><img src="${dados.foto}" alt="${dados.titulo}" style="width: 100px; margin-top: 10px; border-radius: 5px;">`;
+            }
+
+            L.popup()
+                .setLatLng(marker.getLatLng())
+                .setContent(popupConteudoHTML)
+                .openOn(map);
+        });
+
+        // Clique DIREITO no marcador/icone
+        marker.on('contextmenu', (e) => { 
+            L.DomEvent.preventDefault(e);
+            L.DomEvent.stopPropagation(e);
+
+            marcadorAtivo = marker;
+
+            const mapContainer = document.getElementById('mapa-container');
+            const mapRect = mapContainer.getBoundingClientRect();
+            const point = e.containerPoint;
+            
+            if(menuContexto) {
+                menuContexto.style.left = `${mapRect.left + point.x}px`;
+                menuContexto.style.top = `${mapRect.top + point.y}px`;
+                menuContexto.classList.remove('popup-escondido');
+            }
+        });
+    }
+
     if (document.getElementById('mapa-container')) {
 
         const southWest = L.latLng(-90, -180); 
@@ -51,6 +95,31 @@ document.addEventListener('DOMContentLoaded', () => {
         map.addControl(searchControl);
 
         window.myMap = map; 
+
+        // --- CARREGANDO PONTOS DO BANCO ---
+        console.log("Buscando pontos no servidor...");
+        fetch('/pontos')
+            .then(res => res.json())
+            .then(pontos => {
+                console.log(`✅ Servidor retornou ${pontos.length} pontos.`);
+                
+                pontos.forEach(p => {
+                    if(!p.lat || !p.lng || !p.tipo) {
+                        console.warn("Ponto ignorado (dados incompletos):", p);
+                        return;
+                    }
+
+                    let iconUrl = `/img/${p.tipo}.png`;
+                    if(p.tipo.includes('/')) iconUrl = p.tipo;
+
+                    const icon = L.icon({ iconUrl: iconUrl, iconSize: [33, 45], iconAnchor: [16, 32] });
+                    const marker = L.marker([p.lat, p.lng], { icon: icon, draggable: false }).addTo(map);
+                    
+                    marker.dados = { id: p.id, tipo: p.tipo, titulo: p.titulo, descricao: p.descricao, foto: p.foto };
+                    adicionarEventosMarcador(marker);
+                });
+            })
+            .catch(err => console.error("❌ Erro ao carregar pontos:", err));
     }
 
     // Popups de detalhes, manipualação de ícones e marcadores
@@ -65,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Imagem preview
     const fileInput = document.getElementById('popup-detalhes-foto');
     const previewImage = document.querySelector('.popup-detalhes-upload-area img');
-    const placeholderSrc = previewImage.src; 
+    const placeholderSrc = previewImage ? previewImage.src : ''; 
 
     // Manipulação de marcadores e ícones
     const menuContexto = document.getElementById('editar-excluir-container');
@@ -74,22 +143,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let marcadorAtivo = null;
     
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0]; 
-        if (file) {
-            const reader = new FileReader(); 
-            reader.onload = (e) => {
-                previewImage.src = e.target.result;
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0]; 
+            if (file) {
+                const reader = new FileReader(); 
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(file);
-        }
-    });
-
+        });
+    }
 
     if (window.myMap) {
 
         map.on('click', () => {
-            menuContexto.classList.add('popup-escondido');
+            if(menuContexto) menuContexto.classList.add('popup-escondido');
         });
 
         const mapContainer = document.getElementById('mapa-container');
@@ -109,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mapContainer.addEventListener('drop', (e) => {
             e.preventDefault();
 
-            menuContexto.classList.add('popup-escondido');
+            if(menuContexto) menuContexto.classList.add('popup-escondido');
 
             const data = JSON.parse(e.dataTransfer.getData('application/json'));
             const iconSrc = data.src;
@@ -123,10 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const marker = L.marker(latLng, { 
                 icon: customIcon,
-                draggable: true 
+                draggable: false
             }).addTo(map);
 
             marker.dados = {
+                id: null,
                 tipo: data.id,
                 titulo: "",
                 descricao: "",
@@ -135,133 +206,137 @@ document.addEventListener('DOMContentLoaded', () => {
 
             marcadorAtivo = marker;
 
-            popupForm.reset(); 
-            previewImage.src = placeholderSrc;
-            popupIconImg.src = iconSrc; 
+            if(popupForm) popupForm.reset(); 
+            if(previewImage) previewImage.src = placeholderSrc;
+            if(popupIconImg) popupIconImg.src = iconSrc; 
             
             popupContainer.classList.remove('popup-escondido'); 
             popupConteudo.classList.add('ativo'); 
             
-
-            // Clique ESQUERDO no marcador/icone
-            marker.on('click', (e) => {
-                L.DomEvent.stopPropagation(e);
-                menuContexto.classList.add('popup-escondido');
-                
-                const dados = marker.dados;
-
-                if (!dados.titulo) {
-                    return;
-                }
-
-                let popupConteudoHTML = `<b>${dados.titulo}</b><br>${dados.descricao}`;
-
-                if (dados.foto) {
-                    popupConteudoHTML += `<br><img src="${dados.foto}" alt="${dados.titulo}" style="width: 100px; margin-top: 10px; border-radius: 5px;">`;
-                }
-
-                L.popup()
-                    .setLatLng(marker.getLatLng())
-                    .setContent(popupConteudoHTML)
-                    .openOn(map);
-            });
-
-
-            // Clique DIREITO no marcador/icone
-            marker.on('contextmenu', (e) => { 
-                L.DomEvent.preventDefault(e);
-                L.DomEvent.stopPropagation(e);
-
-                marcadorAtivo = marker;
-
-                // Posiciona o menu de manipulação próximo ao cursor
-                const mapRect = mapContainer.getBoundingClientRect();
-                const point = e.containerPoint;
-                menuContexto.style.left = `${mapRect.left + point.x}px`;
-                menuContexto.style.top = `${mapRect.top + point.y}px`;
-
-                menuContexto.classList.remove('popup-escondido');
-            });
+            adicionarEventosMarcador(marker);
         });
     }
 
     // Botões de manipulação dos marcadores (Editar / Excluir)
 
     // Editar
-    btnMenuEditar.addEventListener('click', () => {
-        if (!marcadorAtivo) return;
+    if (btnMenuEditar) {
+        btnMenuEditar.addEventListener('click', () => {
+            if (!marcadorAtivo) return;
 
-        const dados = marcadorAtivo.dados;
-        
-        document.getElementById('popup-detalhes-titulo').value = dados.titulo;
-        document.getElementById('popup-detalhes-observacao').value = dados.descricao;
-        document.getElementById('popup-detalhes-icone').src = marcadorAtivo.options.icon.options.iconUrl;
+            const dados = marcadorAtivo.dados;
+            
+            document.getElementById('popup-detalhes-titulo').value = dados.titulo;
+            document.getElementById('popup-detalhes-observacao').value = dados.descricao;
+            document.getElementById('popup-detalhes-icone').src = marcadorAtivo.options.icon.options.iconUrl;
 
-        if (dados.foto) {
-            previewImage.src = dados.foto;
-        } else {
-            previewImage.src = placeholderSrc;
-        }
-        fileInput.value = "";
+            if (dados.foto) {
+                previewImage.src = dados.foto;
+            } else {
+                previewImage.src = placeholderSrc;
+            }
+            if(fileInput) fileInput.value = "";
 
-        popupContainer.classList.remove('popup-escondido');
-        popupConteudo.classList.add('ativo');
+            popupContainer.classList.remove('popup-escondido');
+            popupConteudo.classList.add('ativo');
 
-        menuContexto.classList.add('popup-escondido');
-    });
+            menuContexto.classList.add('popup-escondido');
+        });
+    }
 
     // Excluir
-    btnMenuExcluir.addEventListener('click', () => {
-        if (!marcadorAtivo) return;
+    if (btnMenuExcluir) {
+        btnMenuExcluir.addEventListener('click', () => {
+            if (!marcadorAtivo) return;
 
-        // Remove o marcador do mapa
-        map.removeLayer(marcadorAtivo);
-        
-        menuContexto.classList.add('popup-escondido');
-        marcadorAtivo = null;
-    });
+            if (marcadorAtivo.dados.id) {
+                fetch(`/pontos/${marcadorAtivo.dados.id}`, { method: 'DELETE' }).catch(e => console.error(e));
+            }
 
+            // Remove o marcador do mapa
+            map.removeLayer(marcadorAtivo);
+            
+            menuContexto.classList.add('popup-escondido');
+            marcadorAtivo = null;
+        });
+    }
 
     // Botões e ações do popup de detalhes
 
     // Botão de enviar
-    popupForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+    if (popupForm) {
+        popupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        if (marcadorAtivo) {
-            const titulo = document.getElementById('popup-detalhes-titulo').value;
-            const observacao = document.getElementById('popup-detalhes-observacao').value;
+            if (marcadorAtivo) {
+                const markerParaSalvar = marcadorAtivo;
 
-            marcadorAtivo.dados.titulo = titulo;
-            marcadorAtivo.dados.descricao = observacao;
+                const titulo = document.getElementById('popup-detalhes-titulo').value;
+                const observacao = document.getElementById('popup-detalhes-observacao').value;
+                let foto = null;
+
+                if (fileInput && fileInput.files[0]) { 
+                    foto = previewImage.src; 
+                } else if (previewImage.src !== placeholderSrc) {
+                    foto = previewImage.src;
+                }
+
+                markerParaSalvar.dados.titulo = titulo;
+                markerParaSalvar.dados.descricao = observacao;
+                markerParaSalvar.dados.foto = foto;
+
+                if (!markerParaSalvar.dados.id) {
+                    console.log("Tentando salvar novo ponto no banco...");
+                    const latLng = markerParaSalvar.getLatLng();
+                    fetch('/pontos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tipo: markerParaSalvar.dados.tipo,
+                            lat: latLng.lat,
+                            lng: latLng.lng,
+                            titulo: titulo,
+                            descricao: observacao,
+                            foto: foto
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => { 
+                        if(data.sucesso) {
+                            markerParaSalvar.dados.id = data.id; 
+                            console.log("Salvo com sucesso! ID:", data.id);
+                        } else {
+                            console.error("Erro do servidor:", data.error);
+                        }
+                    })
+                    .catch(err => console.error("Erro de rede:", err));
+                }
+                
+                popupContainer.classList.add('popup-escondido');
+                popupConteudo.classList.remove('ativo'); 
+                
+                popupForm.reset();
+                previewImage.src = placeholderSrc;
+                marcadorAtivo = null; 
+            }
+        });
+    }
+
+    // Botão X de fechar
+    if (popupCloseBtn) {
+        popupCloseBtn.addEventListener('click', () => {
+            popupContainer.classList.add('popup-escondido');
+            popupConteudo.classList.remove('ativo');
             
-            if (fileInput.files[0]) { 
-                marcadorAtivo.dados.foto = previewImage.src; 
+            if (marcadorAtivo && !marcadorAtivo.dados.titulo) { 
+                map.removeLayer(marcadorAtivo);
             }
 
-            popupContainer.classList.add('popup-escondido');
-            popupConteudo.classList.remove('ativo'); 
-            
             popupForm.reset();
             previewImage.src = placeholderSrc;
 
             marcadorAtivo = null; 
-        }
-    });
-
-    // Botão X de fechar
-    popupCloseBtn.addEventListener('click', () => {
-        popupContainer.classList.add('popup-escondido');
-        popupConteudo.classList.remove('ativo');
-        
-        if (marcadorAtivo && !marcadorAtivo.dados.titulo) { 
-            map.removeLayer(marcadorAtivo);
-        }
-
-        popupForm.reset();
-        previewImage.src = placeholderSrc;
-
-        marcadorAtivo = null; 
-    });
+        });
+    }
 
 });

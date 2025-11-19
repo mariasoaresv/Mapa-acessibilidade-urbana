@@ -1,107 +1,114 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Exibição do popup de login/cadastro
-
     const wrapper = document.querySelector('.wrapper');
     const logarLink = document.querySelector('.logar-link');
     const cadastrarLink = document.querySelector('.cadastrar-link');
     const loginPopup = document.querySelector('.login');
     const iconClose = document.querySelector('.icon-close');
     const sucessoCadastro = document.getElementById('sucesso-cadastro');
-
-    loginPopup.addEventListener('click', () => {
-        wrapper.classList.add('active-popup');
-    });
-
-    iconClose.addEventListener('click', () => {
-        wrapper.classList.remove('active-popup');
-    });
-
-    cadastrarLink.addEventListener('click', () => {
-        wrapper.classList.add('active');
-    });
-
-    logarLink.addEventListener('click', () => {
-        wrapper.classList.remove('active');
-    });
-
-    // Ponte para o backend (server.js)
-
     const loginForm = document.getElementById('login-form');
     const cadastroForm = document.getElementById('cadastro-form');
 
-    // Formulário de login
+    // Eventos de abrir/fechar popup de login e trocar entre login/cadastro
+    if (loginPopup && wrapper) {
+        loginPopup.addEventListener('click', () => {
+            wrapper.classList.add('active-popup');
+        });
+    }
 
+    if (iconClose && wrapper) {
+        iconClose.addEventListener('click', () => {
+            wrapper.classList.remove('active-popup');
+        });
+    }
+
+    if (cadastrarLink && wrapper) {
+        cadastrarLink.addEventListener('click', () => {
+            wrapper.classList.add('active');
+        });
+    }
+
+    if (logarLink && wrapper) {
+        logarLink.addEventListener('click', () => {
+            wrapper.classList.remove('active');
+        });
+    }
+
+    // Lógica do Login
     if (loginForm) {
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const email = document.getElementById('login-email').value;
-            const senha = document.getElementById('login-senha').value;
+            const emailInput = document.getElementById('login-email');
+            const senhaInput = document.getElementById('login-senha');
+
+            if (!emailInput || !senhaInput) return; // Segurança extra
 
             try {
-
                 const response = await fetch('/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email, senha: senha }),
+                    body: JSON.stringify({ 
+                        email: emailInput.value, 
+                        senha: senhaInput.value 
+                    }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
                     sessionStorage.setItem('usuarioLogado', JSON.stringify(data.user));
-                    wrapper.classList.remove('active-popup'); 
-                    window.location.href = 'mapa.html'; //redireciona para a página de mapa
-                    
+                    if (wrapper) wrapper.classList.remove('active-popup'); 
+                    window.location.href = 'mapa.html'; 
                 } else {
-                    alert(data.message); 
+                    alert(data.message || 'Erro no login'); 
                 }
             } catch (error) {
                 console.error('Erro no login:', error);
-                alert('Ocorreu um erro. Tente novamente.');
+                alert('Erro ao conectar com o servidor.');
             }
         });
     }
 
-    // Formulário de cadastro
-
+    // Lógica do Cadastro
     if (cadastroForm) {
         cadastroForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const nome = document.getElementById('cadastro-nome').value;
-            const email = document.getElementById('cadastro-email').value;
-            const senha = document.getElementById('cadastro-senha').value;
-            
+            const nomeInput = document.getElementById('cadastro-nome');
+            const emailInput = document.getElementById('cadastro-email');
+            const senhaInput = document.getElementById('cadastro-senha');
+
+            if (!nomeInput || !emailInput || !senhaInput) return;
 
             try {
-                // Envia os dados para o /cadastro no server.js
                 const response = await fetch('/cadastro', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, email, senha }),
+                    body: JSON.stringify({ 
+                        nome: nomeInput.value, 
+                        email: emailInput.value, 
+                        senha: senhaInput.value 
+                    }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    wrapper.classList.remove('active'); // Volta para a tela de login
+                    if (wrapper) wrapper.classList.remove('active'); 
 
                     if (sucessoCadastro) {
                         sucessoCadastro.classList.add('mostrar-sucesso');
-                        
-                        // Esconde a mensagem após 5 segundos
                         setTimeout(() => {
                             sucessoCadastro.classList.remove('mostrar-sucesso');
                         }, 5000); 
                     }
                 } else {
-                    alert(data.message);
+                    alert(data.message || 'Erro no cadastro');
                 }
             } catch (error) {
                 console.error('Erro no cadastro:', error);
-                alert('Ocorreu um erro. Tente novamente.');
+                alert('Erro ao conectar com o servidor.');
             }
         });
     }
